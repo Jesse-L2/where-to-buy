@@ -22,6 +22,7 @@ class Price_Bot():
         # Using webdriver manager
         self.driver = webdriver.Chrome(service=Service(executable_path=ChromeDriverManager().install()))
         self.close = close
+        self.url = None
         super(Price_Bot, self).__init__()
         self.driver.implicitly_wait(5)
         self.driver.maximize_window()
@@ -57,6 +58,18 @@ class Price_Bot():
         if self.close:
             print('Exiting')
             self.quit()
+
+    def get_URL(self):
+        """Returns the current URL"""
+        return self._url
+
+    def set_URL(self, url):
+        """Sets the current URL"""
+        self._url = self.driver.get(url)
+
+    def __str__(self):
+        """Returns a string representation of Price_Bot"""
+        raise NotImplementedError
 
 
 def main():
