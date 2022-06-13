@@ -14,7 +14,8 @@ NEWSPIDER_MODULE = 'wheretobuy.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'wheretobuy (+http://www.yourdomain.com)'
+# """# Set user agent to google's (an allowed user agent)"""
+# USER_AGENT = 'Mozilla/5.0 (compatible; Googlebot/2.1; +https://www.google.com/bot.html)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -54,6 +55,20 @@ ROBOTSTXT_OBEY = True
 #    'wheretobuy.middlewares.WheretobuyDownloaderMiddleware': 543,
 #}
 
+PROXY_POOL_ENABLED = True
+
+DOWNLOADER_MIDDLEWARES = {
+    # MIDDLEWARES for rotating proxy pool
+    'scrapy_proxy_pool.middlewares.ProxyPoolMiddleware': 610,
+    'scrapy_proxy_pool.middlewares.BanDetectionMiddleware': 620,
+    # ...
+}
+
+"""DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+    'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+}"""
+
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
@@ -62,9 +77,11 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'wheretobuy.pipelines.WheretobuyPipeline': 300,
-#}
+# Lower integer numbers run earlier in pipelines
+ITEM_PIPELINES = {
+   'wheretobuy.pipelines.WheretobuyPipeline': 300,
+}
+
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
