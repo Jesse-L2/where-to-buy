@@ -15,13 +15,13 @@ NEWSPIDER_MODULE = 'wheretobuy.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # """# Set user agent to google's (an allowed user agent)"""
-# USER_AGENT = 'Mozilla/5.0 (compatible; Googlebot/2.1; +https://www.google.com/bot.html)'
+USER_AGENT = 'Mozilla/5.0 (compatible; Googlebot/2.1; +https://www.google.com/bot.html)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 500
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -29,7 +29,7 @@ ROBOTSTXT_OBEY = True
 #DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
+CONCURRENT_REQUESTS_PER_IP = 25
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
@@ -42,6 +42,11 @@ ROBOTSTXT_OBEY = True
 #   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 #   'Accept-Language': 'en',
 #}
+DEFAULT_REQUEST_HEADERS = {
+   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+   'Accept-Language': 'en-US',
+   'Referer': 'https://www.amazon.com'
+}
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
@@ -57,17 +62,26 @@ ROBOTSTXT_OBEY = True
 
 PROXY_POOL_ENABLED = True
 
-DOWNLOADER_MIDDLEWARES = {
-    # MIDDLEWARES for rotating proxy pool
-    'scrapy_proxy_pool.middlewares.ProxyPoolMiddleware': 610,
-    'scrapy_proxy_pool.middlewares.BanDetectionMiddleware': 620,
-    # ...
-}
+# DOWNLOADER_MIDDLEWARES = {
+#     # MIDDLEWARES for rotating proxy pool
+#     'scrapy_proxy_pool.middlewares.ProxyPoolMiddleware': 610,
+#     'scrapy_proxy_pool.middlewares.BanDetectionMiddleware': 620,
+#     # ...
+# }
 
 """DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
 }"""
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+    'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 410,
+    'scrapy_proxy_pool.middlewares.ProxyPoolMiddleware': 610,
+    'scrapy_proxy_pool.middlewares.BanDetectionMiddleware': 620,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -95,6 +109,13 @@ ITEM_PIPELINES = {
 #AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 # Enable showing throttling stats for every response received:
 #AUTOTHROTTLE_DEBUG = False
+
+# RetryMiddleware settings
+RETRY_ENABLED = True
+RETRY_TIMES = 5
+RETRY_HTTP_CODES = [500, 503, 408, 400]
+
+
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings

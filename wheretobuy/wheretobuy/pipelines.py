@@ -51,5 +51,6 @@ class WheretobuyPipeline(object):
             return item
         else:
             raise DropItem(f"Missing price for {item}")"""
+        print(item)
         self.store_db(item)
         return item
