@@ -35,10 +35,10 @@ class WheretobuyPipeline(object):
     def store_db(self, item):
         # Only add new products (ignore if already in products)
         self.curs.execute("""INSERT OR IGNORE INTO products_db VALUES (?,?,?,?)""",
-                          (item['product_name'][0],
-                           item['product_price'][0],
-                           item['product_link'][0],
-                           item['product_image_link'][0])
+                          (item['product_name'],
+                           item['product_price'],
+                           item['product_link'],
+                           item['product_image_link'])
                           )
 
         self.conn.commit()  # Commit and return item in process_item

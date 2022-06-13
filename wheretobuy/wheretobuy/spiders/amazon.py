@@ -1,6 +1,8 @@
 import scrapy
 from ..items import AmazonItem
 
+
+
 class AmazonSpider(scrapy.Spider):
     name = 'amazon'
     allowed_domains = ["amazon.com"]
@@ -12,9 +14,9 @@ class AmazonSpider(scrapy.Spider):
 
     def parse(self, response):
         item = AmazonItem()  # from items.py
-        product_name = response.css('.a-link-normal::text').get()
-        product_price = response.css('.a-price').get()
-        product_link = response.css('a-link-normal::attr(href)').get()
+        product_name = response.css('.a-size-medium.a-text-normal::text').get()  # Working
+        product_price = response.css('.a-price-whole::text').get() + '.' + response.css('.a-price-fraction::text').get()
+        product_link = response.css('.a-size-medium.a-text-normal::attr(href)').get()
         product_image_link = response.css('s-image::attr(src)').get()
 
         item['product_name'] = product_name
